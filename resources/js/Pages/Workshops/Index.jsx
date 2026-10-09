@@ -148,7 +148,7 @@ export default function Index({ auth, workshops, filters, flash }) {
                         {isManager && (
                             <PrimaryButton 
                                 onClick={() => setShowAddModal(true)}
-                                className="w-full xl:w-auto flex-shrink-0 bg-gradient-to-r from-indigo-600 to-purple-600 border-0 hover:from-indigo-700 hover:to-purple-700 shadow-md py-3 px-6 rounded-xl text-sm justify-center"
+                                className="w-full xl:w-auto flex-shrink-0 bg-indigo-600 border-0 hover:bg-indigo-700 shadow-md py-3 px-6 rounded-xl text-sm justify-center"
                             >
                                 <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
                                 Add Workshop
@@ -163,7 +163,7 @@ export default function Index({ auth, workshops, filters, flash }) {
                             
                             return (
                                 <div key={workshop.id} className="group flex flex-col bg-white dark:bg-gray-800 rounded-2xl shadow-sm hover:shadow-xl border border-gray-100 dark:border-gray-700 overflow-hidden transition-all duration-300 transform hover:-translate-y-1">
-                                    <div className="h-32 bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-900/40 dark:to-purple-900/40 relative p-5 flex flex-col justify-between border-b border-gray-100 dark:border-gray-700 transition-colors">
+                                    <div className="h-32 bg-indigo-50 dark:bg-indigo-900/20 relative p-5 flex flex-col justify-between border-b border-gray-100 dark:border-gray-700 transition-colors">
                                         <div className="flex justify-between items-start">
                                             <span className="px-3 py-1 text-xs font-bold rounded-full bg-white dark:bg-gray-800 shadow-sm border border-gray-100 dark:border-gray-600 text-gray-700 dark:text-gray-300 uppercase tracking-wide">
                                                 {workshop.code}
