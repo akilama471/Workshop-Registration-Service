@@ -31,8 +31,28 @@ export default function Index({ auth, workshops, filters, flash }) {
         });
     };
 
-    const handleFilterChange = (e) => {
-        router.get(route('workshops.index'), { status: e.target.value }, { preserveState: true, preserveScroll: true });
+    const [filterData, setFilterData] = useState({
+        status: filters?.status || '',
+        date_start: filters?.date_start || '',
+        date_end: filters?.date_end || '',
+        available_seats: filters?.available_seats === '1' || filters?.available_seats === true || filters?.available_seats === 'true',
+    });
+
+    const applyFilters = (newFilters) => {
+        const query = { ...newFilters };
+        Object.keys(query).forEach(key => {
+            if (query[key] === '' || query[key] === false) {
+                delete query[key];
+            }
+        });
+        
+        router.get(route('workshops.index'), query, { preserveState: true, preserveScroll: true });
+    };
+
+    const handleFilterChange = (key, value) => {
+        const updated = { ...filterData, [key]: value };
+        setFilterData(updated);
+        applyFilters(updated);
     };
 
     return (
@@ -49,18 +69,74 @@ export default function Index({ auth, workshops, filters, flash }) {
                         </div>
                     )}
                     
-                    <div className="mb-6 flex justify-between items-center">
-                        <div>
-                            <select 
-                                defaultValue={filters?.status || ''} 
-                                onChange={handleFilterChange}
-                                className="rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary"
-                            >
-                                <option value="">All Statuses</option>
-                                <option value="scheduled">Scheduled</option>
-                                <option value="completed">Completed</option>
-                                <option value="cancelled">Cancelled</option>
-                            </select>
+                    <div className="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
+                        <div className="flex flex-wrap items-center gap-3 bg-white p-3 rounded-lg shadow-sm border border-gray-100">
+                            <div>
+                                <InputLabel htmlFor="filter-status" value="Status" className="text-xs mb-1" />
+                                <select 
+                                    id="filter-status"
+                                    value={filterData.status} 
+                                    onChange={(e) => handleFilterChange('status', e.target.value)}
+                                    className="rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary text-sm py-1.5"
+                                >
+                                    <option value="">All Statuses</option>
+                                    <option value="scheduled">Scheduled</option>
+                                    <option value="completed">Completed</option>
+                                    <option value="cancelled">Cancelled</option>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <InputLabel htmlFor="filter-start" value="From Date" className="text-xs mb-1" />
+                                <TextInput 
+                                    id="filter-start"
+                                    type="date" 
+                                    value={filterData.date_start} 
+                                    onChange={(e) => handleFilterChange('date_start', e.target.value)}
+                                    className="py-1.5 text-sm"
+                                />
+                            </div>
+                            
+                            <div>
+                                <InputLabel htmlFor="filter-end" value="To Date" className="text-xs mb-1" />
+                                <TextInput 
+                                    id="filter-end"
+                                    type="date" 
+                                    value={filterData.date_end} 
+                                    onChange={(e) => handleFilterChange('date_end', e.target.value)}
+                                    className="py-1.5 text-sm"
+                                />
+                            </div>
+
+                            <div className="flex items-center h-full pt-5">
+                                <label className="flex items-center cursor-pointer">
+                                    <input 
+                                        type="checkbox" 
+                                        checked={filterData.available_seats}
+                                        onChange={(e) => handleFilterChange('available_seats', e.target.checked)}
+                                        className="rounded border-gray-300 text-primary focus:ring-primary"
+                                    />
+                                    <span className="ml-2 text-sm text-gray-600">Available Seats Only</span>
+                                </label>
+                            </div>
+                            
+                            {(filters?.status || filters?.date_start || filters?.date_end || filters?.available_seats) && (
+                                <div className="flex items-center h-full pt-5 ml-2">
+                                    <button 
+                                        onClick={() => {
+                                            const cleared = { status: '', date_start: '', date_end: '', available_seats: false };
+                                            setFilterData(cleared);
+                                            applyFilters(cleared);
+                                        }}
+                                        className="text-sm text-red-600 hover:text-red-800 underline flex items-center"
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                        Clear Filters
+                                    </button>
+                                </div>
+                            )}
                         </div>
                         {isManager && (
                             <PrimaryButton onClick={() => setShowAddModal(true)}>Add Workshop</PrimaryButton>

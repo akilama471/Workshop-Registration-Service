@@ -22,13 +22,25 @@ class WorkshopController extends Controller
             $query->where('status', $request->status);
         }
 
+        if ($request->filled('date_start')) {
+            $query->whereDate('starts_at', '>=', $request->date_start);
+        }
+
+        if ($request->filled('date_end')) {
+            $query->whereDate('starts_at', '<=', $request->date_end);
+        }
+
+        if ($request->boolean('available_seats')) {
+            $query->havingRaw('capacity > active_registrations_count');
+        }
+
         // Add more filters as needed
-        
+
         $workshops = $query->orderBy('starts_at', 'asc')->get();
-        
+
         return Inertia::render('Workshops/Index', [
             'workshops' => $workshops,
-            'filters' => $request->only(['status']),
+            'filters' => $request->only(['status', 'date_start', 'date_end', 'available_seats']),
         ]);
     }
 
@@ -37,7 +49,7 @@ class WorkshopController extends Controller
         if (request()->user()->hasAnyRole(['Manager', 'Staff'])) {
             $workshop->load(['registrations.creator', 'registrations.history.user']);
         }
-        
+
         $workshop->loadCount(['registrations as active_registrations_count' => function ($q) {
             $q->where('status', 'active');
         }]);
@@ -50,12 +62,14 @@ class WorkshopController extends Controller
     public function store(StoreWorkshopRequest $request, CreateWorkshopAction $action)
     {
         $action->execute($request->validated());
+
         return redirect()->route('workshops.index')->with('success', 'Workshop created successfully.');
     }
 
     public function update(UpdateWorkshopRequest $request, Workshop $workshop, UpdateWorkshopAction $action)
     {
         $action->execute($workshop, $request->validated());
+
         return redirect()->back()->with('success', 'Workshop updated successfully.');
     }
 }

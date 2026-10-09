@@ -14,8 +14,9 @@ Route::get('/', function () {
     ]);
 });
 
-use App\Http\Controllers\WorkshopController;
 use App\Http\Controllers\RegistrationController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\WorkshopController;
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', function () {
@@ -29,10 +30,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::post('/workshops/{workshop}/registrations', [RegistrationController::class, 'store'])->name('registrations.store');
     Route::delete('/workshops/{workshop}/registrations/{registration}', [RegistrationController::class, 'destroy'])->name('registrations.destroy');
-    
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::get('/users', [UserController::class, 'index'])->name('users.index');
+    Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
+    Route::post('/users', [UserController::class, 'store'])->name('users.store');
 });
 
 require __DIR__.'/auth.php';
