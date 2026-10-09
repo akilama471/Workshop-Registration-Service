@@ -28,7 +28,23 @@ class RolesAndPermissionsSeeder extends Seeder
             'name' => 'Super Admin',
             'password' => Hash::make('password'),
         ]);
-        
         $admin->assignRole($adminRole);
+
+        // Seed sample workshops
+        \App\Models\Workshop::firstOrCreate(['code' => 'WK-001'], [
+            'title' => 'Intro to Pottery',
+            'instructor' => 'Jane Doe',
+            'starts_at' => now()->addDays(2),
+            'capacity' => 10,
+            'status' => 'scheduled'
+        ]);
+
+        \App\Models\Workshop::firstOrCreate(['code' => 'WK-002'], [
+            'title' => 'Advanced Coding',
+            'instructor' => 'John Smith',
+            'starts_at' => now()->addDays(5),
+            'capacity' => 5,
+            'status' => 'scheduled'
+        ]);
     }
 }
