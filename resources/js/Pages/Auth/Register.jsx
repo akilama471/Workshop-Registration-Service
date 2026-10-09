@@ -23,7 +23,12 @@ export default function Register() {
 
     return (
         <GuestLayout>
-            <Head title="Register" />
+            <Head title="Create an account" />
+
+            <div className="mb-8">
+                <h2 className="text-3xl font-extrabold text-gray-900 mb-2">Create an account</h2>
+                <p className="text-gray-600">Join WorkshopHub and start learning.</p>
+            </div>
 
             <form onSubmit={submit}>
                 <div>
@@ -102,17 +107,17 @@ export default function Register() {
                     />
                 </div>
 
-                <div className="mt-4 flex items-center justify-end">
-                    <Link
-                        href={route('login')}
-                        className="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:text-gray-400 dark:hover:text-gray-100 dark:focus:ring-offset-gray-800"
-                    >
-                        Already registered?
-                    </Link>
-
-                    <PrimaryButton className="ms-4" disabled={processing}>
-                        Register
+                <div className="mt-8">
+                    <PrimaryButton className="w-full justify-center py-3 bg-indigo-600 hover:bg-indigo-700" disabled={processing}>
+                        Create account
                     </PrimaryButton>
+                </div>
+                
+                <div className="mt-6 text-center text-sm text-gray-600">
+                    Already have an account?{' '}
+                    <Link href={route('login')} className="font-medium text-indigo-600 hover:text-indigo-500">
+                        Sign in
+                    </Link>
                 </div>
             </form>
         </GuestLayout>
